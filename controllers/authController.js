@@ -1,3 +1,4 @@
+// Handles registration, login, and 2FA verification
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const speakeasy = require('speakeasy');

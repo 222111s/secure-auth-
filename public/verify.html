@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head><title>2FA Verification</title></head>
+<body>
+  <h2>Enter 2FA Code</h2>
+  <input id="code" placeholder="6-digit code" /><br><br>
+  <button onclick="verify()">Verify</button>
+  <div id="result"></div>
+
+  <script>
+    async function verify() {
+      const email = localStorage.getItem('pendingEmail');
+      const res = await fetch('/auth/verify-2fa', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, token: document.getElementById('code').value })
+      });
+      const data = await res.json();
+      document.getElementById('result').innerText = data.message;
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('role', data.role);
+        setTimeout(() => window.location.href = '/dashboard.html', 1000);
+      }
+    }
+  </script>
+</body>
+</html>

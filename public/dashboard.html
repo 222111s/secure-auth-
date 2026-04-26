@@ -5,6 +5,9 @@
   <h2>Dashboard</h2>
   <div id="result"></div>
   <br>
+  <p><strong>Your JWT Token:</strong></p>
+  <p id="tokenDisplay" style="word-break:break-all; color:green; font-size:12px;"></p>
+  <br>
   <button onclick="window.location.href='/admin.html'">Admin Page</button>
   <button onclick="window.location.href='/manager.html'">Manager Page</button>
   <button onclick="window.location.href='/profile.html'">Profile Page</button>
@@ -16,6 +19,9 @@
     const role = localStorage.getItem('role');
 
     if (!token) window.location.href = '/login.html';
+
+    // Show the token on screen
+    document.getElementById('tokenDisplay').innerText = token;
 
     fetch('/api/dashboard', {
       headers: { 'Authorization': 'Bearer ' + token }

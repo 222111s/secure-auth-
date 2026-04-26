@@ -1,3 +1,4 @@
+// User model with role and 2FA secret
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
 

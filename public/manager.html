@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head><title>Manager Page</title></head>
+<body>
+  <h2>Manager Panel</h2>
+  <div id="result"></div>
+  <br>
+  <button onclick="goBack()">Back to Dashboard</button>
+
+  <script>
+    const token = localStorage.getItem('token');
+
+    fetch('/api/manager', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    })
+    .then(r => r.json())
+    .then(d => document.getElementById('result').innerText = d.message)
+    .catch(err => document.getElementById('result').innerText = 'Access Denied');
+
+    function goBack() {
+      window.location.href = '/dashboard.html';
+    }
+  </script>
+</body>
+</html>

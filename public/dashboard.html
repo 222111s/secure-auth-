@@ -5,20 +5,29 @@
   <h2>Dashboard</h2>
   <div id="result"></div>
   <br>
-  <button onclick="goTo('/api/admin')">Admin Page</button>
-  <button onclick="goTo('/api/manager')">Manager Page</button>
-  <button onclick="goTo('/api/profile')">Profile Page</button>
+  <button onclick="window.location.href='/admin.html'">Admin Page</button>
+  <button onclick="window.location.href='/manager.html'">Manager Page</button>
+  <button onclick="window.location.href='/profile.html'">Profile Page</button>
+  <br><br>
+  <button onclick="logout()">Logout</button>
 
   <script>
     const token = localStorage.getItem('token');
+    const role = localStorage.getItem('role');
 
-    fetch('/api/dashboard', { headers: { 'Authorization': 'Bearer ' + token } })
-      .then(r => r.json()).then(d => document.getElementById('result').innerText = d.message);
+    if (!token) window.location.href = '/login.html';
 
-    async function goTo(url) {
-      const res = await fetch(url, { headers: { 'Authorization': 'Bearer ' + token } });
-      const data = await res.json();
-      alert(JSON.stringify(data));
+    fetch('/api/dashboard', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    })
+    .then(r => r.json())
+    .then(d => {
+      document.getElementById('result').innerText = d.message + ' | Role: ' + role;
+    });
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = '/login.html';
     }
   </script>
 </body>

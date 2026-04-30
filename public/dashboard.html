@@ -1,36 +1,114 @@
 <!DOCTYPE html>
 <html>
-<head><title>Dashboard</title></head>
+<head>
+  <title>Dashboard</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; background: #f0f2f5; }
+    .navbar {
+      background: #1a1a2e;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .navbar h1 { color: white; font-size: 20px; }
+    .navbar button {
+      background: #e63946;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .container { padding: 30px; max-width: 800px; margin: 0 auto; }
+    .welcome {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    .welcome h2 { color: #1a1a2e; margin-bottom: 8px; }
+    .welcome p { color: #666; font-size: 14px; }
+    .role-badge {
+      display: inline-block;
+      background: #4361ee;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      margin-top: 8px;
+    }
+    .buttons { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
+    .btn {
+      flex: 1;
+      padding: 20px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      color: white;
+      min-width: 150px;
+    }
+    .btn-admin { background: #e63946; }
+    .btn-manager { background: #f4a261; }
+    .btn-user { background: #2a9d8f; }
+    .btn:hover { opacity: 0.9; }
+    .token-box {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .token-box h3 { color: #1a1a2e; margin-bottom: 10px; }
+    .token-text {
+      background: #f8f9fa;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      word-break: break-all;
+      color: #2a9d8f;
+      border: 1px solid #ddd;
+    }
+  </style>
+</head>
 <body>
-  <h2>Dashboard</h2>
-  <div id="result"></div>
-  <br>
-  <p><strong>Your JWT Token:</strong></p>
-  <p id="tokenDisplay" style="word-break:break-all; color:green; font-size:12px;"></p>
-  <br>
-  <button onclick="window.location.href='/admin.html'">Admin Page</button>
-  <button onclick="window.location.href='/manager.html'">Manager Page</button>
-  <button onclick="window.location.href='/profile.html'">Profile Page</button>
-  <br><br>
-  <button onclick="logout()">Logout</button>
+  <div class="navbar">
+    <h1>🔐 Secure Auth System</h1>
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <div class="container">
+    <div class="welcome">
+      <h2 id="welcomeMsg">Welcome!</h2>
+      <p>You are successfully logged in with 2FA</p>
+      <span class="role-badge" id="roleBadge"></span>
+    </div>
+
+    <div class="buttons">
+      <button class="btn btn-admin" onclick="window.location.href='/admin.html'">👑 Admin Page</button>
+      <button class="btn btn-manager" onclick="window.location.href='/manager.html'">📋 Manager Page</button>
+      <button class="btn btn-user" onclick="window.location.href='/profile.html'">👤 Profile Page</button>
+    </div>
+
+    <div class="token-box">
+      <h3>🎫 Your JWT Token</h3>
+      <div class="token-text" id="tokenDisplay"></div>
+    </div>
+  </div>
 
   <script>
     const token = localStorage.getItem('token');
     const role = localStorage.getItem('role');
-
     if (!token) window.location.href = '/login.html';
-
-    // Show the token on screen
     document.getElementById('tokenDisplay').innerText = token;
-
+    document.getElementById('roleBadge').innerText = 'Role: ' + role.toUpperCase();
     fetch('/api/dashboard', {
       headers: { 'Authorization': 'Bearer ' + token }
     })
     .then(r => r.json())
-    .then(d => {
-      document.getElementById('result').innerText = d.message + ' | Role: ' + role;
-    });
-
+    .then(d => document.getElementById('welcomeMsg').innerText = d.message);
     function logout() {
       localStorage.clear();
       window.location.href = '/login.html';
